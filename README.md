@@ -20,8 +20,7 @@
 
 
 参考项目：
-1. H+ 后台主题UI框架
-2. goshop2 https://github.com/pzhgugu/goshop2
+1. goshop2 https://github.com/pzhgugu/goshop2
 
 
 
