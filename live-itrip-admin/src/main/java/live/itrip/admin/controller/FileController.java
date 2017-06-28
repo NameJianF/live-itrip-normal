@@ -1,6 +1,6 @@
 package live.itrip.admin.controller;
 
-import live.itrip.admin.controller.base.AbstractController;
+import live.itrip.admin.controller.base.BaseController;
 import live.itrip.admin.service.intefaces.IWebFileInfoService;
 import live.itrip.common.Logger;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * 文件操作
  */
 @Controller
-public class FileController extends AbstractController {
+public class FileController extends BaseController {
     @Autowired
     private IWebFileInfoService iWebFileInfoService;
 

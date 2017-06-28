@@ -1,7 +1,7 @@
 package live.itrip.admin.controller;
 
 import com.alibaba.fastjson.JSON;
-import live.itrip.admin.controller.base.AbstractController;
+import live.itrip.admin.controller.base.BaseController;
 import live.itrip.admin.service.intefaces.*;
 import live.itrip.common.Logger;
 import live.itrip.common.request.RequestHeader;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Feng on 2016/8/5.
  */
 @Controller
-public class AdminController extends AbstractController {
+public class AdminController extends BaseController {
 
     @Autowired
     private IAdminModuleService iAdminModuleService;

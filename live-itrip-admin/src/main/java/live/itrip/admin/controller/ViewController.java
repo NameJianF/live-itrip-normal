@@ -2,10 +2,9 @@ package live.itrip.admin.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import live.itrip.admin.controller.base.AbstractController;
+import live.itrip.admin.controller.base.BaseController;
 import live.itrip.admin.model.AdminUser;
 import live.itrip.admin.model.UserExpand;
-import live.itrip.admin.service.impls.UserService;
 import live.itrip.admin.service.intefaces.*;
 import live.itrip.common.ErrorCode;
 import live.itrip.common.Logger;
@@ -30,7 +29,7 @@ import java.io.IOException;
  * action 页面导航/加载
  */
 @Controller
-public class ViewController extends AbstractController {
+public class ViewController extends BaseController {
 
     @Autowired
     private IWebCustomerAskService iWebCustomerAskService;

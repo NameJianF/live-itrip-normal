@@ -2,7 +2,7 @@ package live.itrip.admin.controller;
 
 import live.itrip.admin.common.Constants;
 import live.itrip.admin.common.HtmlUtils;
-import live.itrip.admin.controller.base.AbstractController;
+import live.itrip.admin.controller.base.BaseController;
 import live.itrip.admin.model.*;
 import live.itrip.admin.service.intefaces.IUserService;
 import live.itrip.admin.service.intefaces.IWebCityInfoService;
@@ -27,7 +27,7 @@ import java.util.List;
  * 前端 页面路由
  */
 @Controller
-public class ViewRouterController extends AbstractController {
+public class ViewRouterController extends BaseController {
     @Autowired
     private ServletContext servletContext;
     @Autowired

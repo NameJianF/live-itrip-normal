@@ -2,10 +2,9 @@ package live.itrip.admin.controller;
 
 import live.itrip.admin.common.Constants;
 import live.itrip.admin.common.ViewConstants;
-import live.itrip.admin.controller.base.AbstractController;
+import live.itrip.admin.controller.base.BaseController;
 import live.itrip.admin.model.*;
 import live.itrip.admin.service.intefaces.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,7 +25,7 @@ import java.util.List;
  * 后台管理 页面路由
  */
 @Controller
-public class AdminRouterController extends AbstractController {
+public class AdminRouterController extends BaseController {
     @Autowired
     private IUserService iUserService;
     @Autowired

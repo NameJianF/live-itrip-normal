@@ -17,6 +17,7 @@
         <module>live-itrip-wechat</module>
         <module>live-itrip-shiro</module>
         <module>live-itrip-email</module>
+        <module>live-itrip-api</module>
     </modules>
     <url>http://maven.apache.org</url>
     <build>

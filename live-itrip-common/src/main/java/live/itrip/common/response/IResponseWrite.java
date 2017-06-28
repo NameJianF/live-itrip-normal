@@ -1,11 +1,11 @@
-package live.itrip.admin.interfaces;
+package live.itrip.common.response;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by 建锋 on 2016/7/7.
  */
-public interface IWriteResponse {
+public interface IResponseWrite {
     /**
      * Write Response
      *
