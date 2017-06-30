@@ -10,11 +10,18 @@ public class Config {
     public static String FILE_SAVE_PATH;
 
 
+    public static class MysqlConfig {
+        //mysql
+        public static String JDBC_URL;
+        public static String JDBC_USERNAME;
+        public static String JDBC_PASSWORD;
+    }
+
     public static class AndroidAppVersion {
         public static String VERSION_CODE = "";
         public static String VERSION_NAME = "";
         public static String UPDATE_DESC = "";
         public static String DOWNLOAD_URL = "";
-        public static String PUBLISH_DATE="";
+        public static String PUBLISH_DATE = "";
     }
 }
