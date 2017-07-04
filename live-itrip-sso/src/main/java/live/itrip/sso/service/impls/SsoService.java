@@ -44,11 +44,9 @@ public class SsoService extends BaseService implements ISsoService {
      * 登录
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void login(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult login(String decodeJson, HttpServletRequest request) throws ApiException {
         BaseResult result = new BaseResult();
 
         try {
@@ -77,7 +75,7 @@ public class SsoService extends BaseService implements ISsoService {
                         // 验证密码
                         String password = Md5Utils.getStringMD5(user.getSalt() + loginRequest.getData().getPassword());
 
-                        if (password.equals(user.getPassword())) {
+                        if (user.getPassword().equals(password)) {
                             // 生成并保存token
                             UserToken token = generateUserToken(user, loginRequest, request);
 
@@ -98,8 +96,7 @@ public class SsoService extends BaseService implements ISsoService {
                             result.setData(user);
 
                             result.setCode(ErrorCode.SUCCESS.getCode());
-                            this.writeResponse(response, result);
-                            return;
+                            return result;
                         } else {
                             // 密码错误
                             result.setCode(ErrorCode.USERNAME_PWD_INVALID.getCode());
@@ -123,18 +120,16 @@ public class SsoService extends BaseService implements ISsoService {
             Logger.error(e.getMessage(), e);
         }
 
-        this.writeResponse(response, result);
+        return result;
     }
 
     /**
      * 用户退出
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void logout(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult logout(String decodeJson, HttpServletRequest request) throws ApiException {
         try {
             LogoutRequest logoutRequest = JSON.parseObject(decodeJson, LogoutRequest.class);
             BaseResult result = new BaseResult();
@@ -143,10 +138,13 @@ public class SsoService extends BaseService implements ISsoService {
             // remove from online table
             int ret = this.userOnlineMapper.deleteByUserIdOrUserEmail(logoutRequest.getUid(), logoutRequest.getEmail());
 
+            // remove session
+            request.getSession().setAttribute(Constants.SESSION_USER, null);
+
             if (ret <= 0) {
                 result.setCode(ErrorCode.UNKNOWN.getCode());
             }
-            this.writeResponse(response, result);
+            return result;
         } catch (Exception e) {
             throw new ApiException(e.getMessage(), e, true);
         }
@@ -156,11 +154,9 @@ public class SsoService extends BaseService implements ISsoService {
      * 用户鉴权,是否是合法用户
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void authUser(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult authUser(String decodeJson) throws ApiException {
         try {
             AuthUserRequest authUserRequest = JSON.parseObject(decodeJson, AuthUserRequest.class);
             BaseResult authUserResponse = new BaseResult();
@@ -186,7 +182,7 @@ public class SsoService extends BaseService implements ISsoService {
                 }
             }
 
-            this.writeResponse(response, authUserResponse);
+            return authUserResponse;
         } catch (Exception e) {
             throw new ApiException(e.getMessage(), e, true);
         }

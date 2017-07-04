@@ -16,7 +16,9 @@ public class MessageModel extends BaseModel {
     private Long userFrom;
     private Long userTo;
     private String content;
+    private String readme;
     private Long createTime;
+    private Long updateTime;
 
     public Long getId() {
         return id;
@@ -66,14 +68,30 @@ public class MessageModel extends BaseModel {
         this.createTime = createTime;
     }
 
-    public static MessageModel getBean(Map<String, Object> item) {
-        MessageModel bean = new MessageModel();
-        bean.setId((Long) item.get("id"));
-        bean.setType((String) item.get("type"));
-        bean.setUserFrom((Long) item.get("user_from"));
-        bean.setUserTo((Long) item.get("user_to"));
-        bean.setContent((String) item.get("content"));
-        bean.setCreateTime((Long) item.get("create_time"));
-        return bean;
+    public String getReadme() {
+        return readme;
     }
+
+    public void setReadme(String readme) {
+        this.readme = readme;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+//    public static MessageModel getBean(Map<String, Object> item) {
+//        MessageModel bean = new MessageModel();
+//        bean.setId((Long) item.get("id"));
+//        bean.setType((String) item.get("type"));
+//        bean.setUserFrom((Long) item.get("user_from"));
+//        bean.setUserTo((Long) item.get("user_to"));
+//        bean.setContent((String) item.get("content"));
+//        bean.setReadme((String) item.get("readme"));
+//        bean.setCreateTime((Long) item.get("create_time"));
+//        return bean;
+//    }
 }

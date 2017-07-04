@@ -44,7 +44,7 @@ public class AppApiController extends BaseController {
 //            System.err.println("ret : " + ret);
 //        }
 
-        ArrayList<MessageModel> list = MessageService.selectMessages(1L, 1, 30, 0L);
+        ArrayList<MessageModel> list = MessageService.selectMessages(null, 1L, 1, 30, 0L);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("list", list);
@@ -76,16 +76,38 @@ public class AppApiController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/list/msg", method = RequestMethod.GET)
+    /**
+     * 消息列表
+     *
+     * @param response
+     * @param uid
+     * @param page
+     * @param pageSize
+     * @param lastMsgId
+     */
+    @RequestMapping(value = "/msg/list", method = RequestMethod.GET)
     public
     @ResponseBody
     void selectMessageList(HttpServletResponse response
+            , @RequestParam(value = "type", required = false) String msgType
             , @RequestParam(value = "uid", required = false) Long uid
             , @RequestParam(value = "page", required = false) Integer page
             , @RequestParam(value = "pageSize", required = false) Integer pageSize
             , @RequestParam(value = "lastMsgId", required = false) Long lastMsgId) {
 
-        iUserMessageService.selectMessageList(response, uid, page, pageSize, lastMsgId);
+        iUserMessageService.selectMessageList(response, msgType, uid, page, pageSize, lastMsgId);
+    }
+
+    /**
+     * 获取消息具体信息
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/msg/{id}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void getMessageDetail(@PathVariable Long id, HttpServletResponse response) {
+        iUserMessageService.selectMessageDetail(response, id);
     }
 
 

@@ -54,15 +54,16 @@ public class SsoController extends AbstractController {
 
             // validate Api Params
             BaseResult error = this.validateParams(header, decodeJson);
-            if (error.getCode() == ErrorCode.SUCCESS.getCode()) {
+            if (ErrorCode.SUCCESS.getCode().equals(error.getCode())) {
                 if (SsoOprations.OP_SSO_LOGIN.equalsIgnoreCase(op)) {
                     // login
-                    iSsoService.login(decodeJson, response, request);
+                    this.writeResponse(response, iSsoService.login(decodeJson, request));
                 } else if (SsoOprations.OP_SSO_LOGOUT.equalsIgnoreCase(op)) {
                     // logout
+                    this.writeResponse(response, iSsoService.logout(decodeJson, request));
                 } else if (SsoOprations.OP_SSO_AUTH.equalsIgnoreCase(op)) {
                     // auth
-                    iSsoService.authUser(decodeJson, response, request);
+                    this.writeResponse(response, iSsoService.authUser(decodeJson));
                 }
             } else {
                 this.writeResponseErrorApp(response, error);

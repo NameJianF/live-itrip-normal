@@ -1,15 +1,13 @@
 package live.itrip.sso.service.impls;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import live.itrip.common.ErrorCode;
 import live.itrip.common.response.BaseResult;
 import live.itrip.common.security.Md5Utils;
 import live.itrip.common.util.UuidUtils;
-import live.itrip.sso.bean.RetrievePwdRequest;
-import live.itrip.sso.bean.UserRegisterRequest;
-import live.itrip.sso.bean.UserUpdatePwdRequest;
-import live.itrip.sso.bean.UserUpdateRequest;
+import live.itrip.sso.bean.*;
 import live.itrip.sso.common.exception.ApiException;
 import live.itrip.sso.dao.UserMapper;
 import live.itrip.sso.model.User;
@@ -19,8 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  * Created by JianF on 2015/12/22.
@@ -41,11 +38,9 @@ public class UserService extends BaseService implements IUserService {
      * 注册
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void register(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult register(String decodeJson) throws ApiException {
         try {
             UserRegisterRequest userRegisterRequest = JSON.parseObject(decodeJson, UserRegisterRequest.class);
             BaseResult userRegisterResponse = new BaseResult();
@@ -71,7 +66,7 @@ public class UserService extends BaseService implements IUserService {
                 }
             }
 
-            this.writeResponse(response, userRegisterResponse);
+            return userRegisterResponse;
         } catch (Exception ex) {
             throw new ApiException(ex.getMessage(), ex, true);
         }
@@ -81,40 +76,35 @@ public class UserService extends BaseService implements IUserService {
      * 修改密码
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void updatePassword(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult updatePassword(String decodeJson) throws ApiException {
         try {
             UserUpdatePwdRequest userUpdatePwdRequest = JSON.parseObject(decodeJson, UserUpdatePwdRequest.class);
             BaseResult userUpdatePwdResponse = new BaseResult();
             userUpdatePwdResponse.setOp(userUpdatePwdRequest.getOp());
 
             if (userUpdatePwdRequest.getUid() == null) {
-                this.paramInvalid(response, "uid", userUpdatePwdRequest.getUid().toString());
-                return;
+                return this.paramInvalid("uid", userUpdatePwdRequest.getUid().toString());
             }
 
             if (StringUtils.isEmpty(userUpdatePwdRequest.getOriginPwd())) {
-                this.paramInvalid(response, "originPwd", userUpdatePwdRequest.getOriginPwd());
-                return;
+                return this.paramInvalid("originPwd", userUpdatePwdRequest.getOriginPwd());
             }
 
             if (StringUtils.isEmpty(userUpdatePwdRequest.getPassword())) {
-                this.paramInvalid(response, "password", userUpdatePwdRequest.getPassword());
-                return;
+                return this.paramInvalid("password", userUpdatePwdRequest.getPassword());
             }
 
             User user = this.userMapper.selectByPrimaryKey(userUpdatePwdRequest.getUid());
             if (user == null) {
                 userUpdatePwdResponse.setCode(ErrorCode.USER_AUTH_INVALID.getCode());
                 userUpdatePwdResponse.setMsg(String.format("参数uid(%s)无效,无此用户。", userUpdatePwdRequest.getUid()));
-                this.writeResponse(response, userUpdatePwdResponse);
-                return;
+                return userUpdatePwdResponse;
             }
 
-            if (Md5Utils.getStringMD5(user.getSalt() + userUpdatePwdRequest.getOriginPwd()).equals(user.getPassword())) {
+            String strmd5 = Md5Utils.getStringMD5(user.getSalt() + userUpdatePwdRequest.getOriginPwd());
+            if (StringUtils.isNotEmpty(strmd5) && strmd5.equals(user.getPassword())) {
                 // 原密码正确
                 String pwd = Md5Utils.getStringMD5(user.getSalt() + userUpdatePwdRequest.getPassword());
                 int ret = this.userMapper.updatePasswordById(user.getId(), pwd);
@@ -130,7 +120,7 @@ public class UserService extends BaseService implements IUserService {
                 userUpdatePwdResponse.setCode(ErrorCode.USERNAME_PWD_INVALID.getCode());
                 userUpdatePwdResponse.setMsg(ErrorCode.USERNAME_PWD_INVALID.getMessage());
             }
-            this.writeResponse(response, userUpdatePwdResponse);
+            return userUpdatePwdResponse;
         } catch (Exception ex) {
             throw new ApiException(ex.getMessage(), ex, true);
         }
@@ -140,11 +130,9 @@ public class UserService extends BaseService implements IUserService {
      * 修改用户信息
      *
      * @param decodeJson
-     * @param response
-     * @param request
      */
     @Override
-    public void updateUserInfo(String decodeJson, HttpServletResponse response, HttpServletRequest request) throws ApiException {
+    public BaseResult updateUserInfo(String decodeJson) throws ApiException {
         try {
             UserUpdateRequest userUpdateRequest = JSON.parseObject(decodeJson, UserUpdateRequest.class);
             BaseResult userUpdateResponse = new BaseResult();
@@ -154,14 +142,12 @@ public class UserService extends BaseService implements IUserService {
             if (user == null) {
                 userUpdateResponse.setCode(ErrorCode.PARAM_INVALID.getCode());
                 userUpdateResponse.setMsg("参数user(null)无效。");
-                this.writeResponse(response, userUpdateResponse);
-                return;
+                return userUpdateResponse;
             }
             if (userUpdateRequest.getData().getId() == null) {
                 userUpdateResponse.setCode(ErrorCode.PARAM_INVALID.getCode());
                 userUpdateResponse.setMsg(String.format("参数user id(%s)无效。", userUpdateRequest.getData().getId()));
-                this.writeResponse(response, userUpdateResponse);
-                return;
+                return userUpdateResponse;
             }
 
             user.setPassword(null); // 不修改密码
@@ -176,7 +162,7 @@ public class UserService extends BaseService implements IUserService {
                 userUpdateResponse.setCode(ErrorCode.UNKNOWN.getCode());
             }
 
-            this.writeResponse(response, userUpdateResponse);
+            return userUpdateResponse;
         } catch (Exception ex) {
             throw new ApiException(ex.getMessage(), ex, true);
         }
@@ -184,13 +170,9 @@ public class UserService extends BaseService implements IUserService {
 
     /**
      * 找回密码
-     *
-     * @param response
-     * @param request
      */
     @Override
-    public void retrievePassword(String decodeJson, HttpServletResponse response,
-                                 HttpServletRequest request) throws ApiException {
+    public BaseResult retrievePassword(String decodeJson) throws ApiException {
         try {
             RetrievePwdRequest retrievePwdRequest = JSON.parseObject(decodeJson, RetrievePwdRequest.class);
             BaseResult retrievePwdResponse = new BaseResult();
@@ -212,9 +194,7 @@ public class UserService extends BaseService implements IUserService {
                     // failed
                     retrievePwdResponse.setCode(ErrorCode.UNKNOWN.getCode());
                 }
-
-                this.writeResponse(response, retrievePwdResponse);
-                return;
+                return retrievePwdResponse;
             }
 
             // 发送短信
@@ -233,13 +213,52 @@ public class UserService extends BaseService implements IUserService {
                     // failed
                     retrievePwdResponse.setCode(ErrorCode.UNKNOWN.getCode());
                 }
-
-                this.writeResponse(response, retrievePwdResponse);
-                return;
+                return retrievePwdResponse;
             }
 
             retrievePwdResponse.setCode(ErrorCode.UNKNOWN.getCode());
-            this.writeResponse(response, retrievePwdResponse);
+            return retrievePwdResponse;
+        } catch (Exception ex) {
+            throw new ApiException(ex.getMessage(), ex, true);
+        }
+    }
+
+    @Override
+    public BaseResult selectUserNameAvatar(String decodeJson) throws ApiException {
+        try {
+            UserNameAvatarRequest userNameAvatarRequest = JSON.parseObject(decodeJson, UserNameAvatarRequest.class);
+
+            BaseResult baseResult = new BaseResult();
+            baseResult.setOp(userNameAvatarRequest.getOp());
+
+            // 查询数据
+            if (userNameAvatarRequest.getIds() != null && userNameAvatarRequest.getIds().size() > 0) {
+                ArrayList<User> userList = this.userMapper.selectUserNameAvatar(userNameAvatarRequest.getIds());
+
+                if (userList != null) {
+                    // success
+                    JSONArray array = new JSONArray();
+                    for (User user : userList) {
+                        JSONObject object = new JSONObject();
+                        object.put("id", user.getId());
+                        object.put("userName", user.getUserName());
+                        object.put("img", user.getImg());
+                        array.add(object);
+                    }
+
+                    baseResult.setCode(ErrorCode.SUCCESS.getCode());
+                    baseResult.setData(array);
+
+                } else {
+                    // failed
+                    baseResult.setCode(ErrorCode.UNKNOWN.getCode());
+                }
+
+                return baseResult;
+            }
+
+            baseResult.setCode(ErrorCode.UNKNOWN.getCode());
+            return baseResult;
         } catch (Exception ex) {
             throw new ApiException(ex.getMessage(), ex, true);
         }

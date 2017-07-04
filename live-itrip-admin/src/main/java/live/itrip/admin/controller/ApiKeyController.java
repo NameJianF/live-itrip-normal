@@ -1,7 +1,7 @@
 package live.itrip.admin.controller;
 
 import com.alibaba.fastjson.JSON;
-import live.itrip.admin.controller.base.BaseController;
+import live.itrip.admin.controller.base.AbstractController;
 import live.itrip.admin.model.ClientApiKey;
 import live.itrip.admin.service.intefaces.IClientApiKeyService;
 import live.itrip.common.Logger;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * api key  配置
  */
 @Controller
-public class ApiKeyController extends BaseController {
+public class ApiKeyController extends AbstractController {
     @Autowired
     private IClientApiKeyService iClientApiKeyService;
 
@@ -47,7 +47,7 @@ public class ApiKeyController extends BaseController {
         try {
             RequestHeader header = JSON.parseObject(decodeJson, RequestHeader.class);
             // 校验apikey
-            ClientApiKey clientApiKey = this.getClientApiKey(header.getApikey());
+            ClientApiKey clientApiKey = this.validateClientApiKey(header.getApikey());
             if (clientApiKey == null) {
                 this.paramInvalid(response, "apikey");
                 return;

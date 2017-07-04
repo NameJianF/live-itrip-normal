@@ -28,4 +28,9 @@ public class UserOprations {
      */
     public static final String OP_API_USER_RETRIEVE_PWD = "User.retrieve";
 
+    /**
+     * 获取用户姓名和头像
+     */
+    public static final String OP_API_USER_NAME_AVATAR = "User.NameAvatar";
+
 }

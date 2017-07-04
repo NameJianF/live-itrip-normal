@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface IUserMessageService {
 
-    void selectMessageList(HttpServletResponse response, Long userId, int page, int pageSize, Long lastMsgId);
+    void selectMessageList(HttpServletResponse response, String msgType, Long userId, int page, int pageSize, Long lastMsgId);
 
+    void selectMessageDetail(HttpServletResponse response, Long msgId);
 }

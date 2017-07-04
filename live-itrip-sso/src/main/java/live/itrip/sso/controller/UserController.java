@@ -73,22 +73,25 @@ public class UserController extends AbstractController {
             String op = header.getOp();
             // validate Api Params
             BaseResult error = this.validateParams(header, decodeJson);
-            if (error.getCode() == ErrorCode.SUCCESS.getCode()) {
+            if (ErrorCode.SUCCESS.getCode().equals(error.getCode())) {
                 if (UserOprations.OP_API_USER_REGISTER.equalsIgnoreCase(op)
                         || UserOprations.OP_API_USER_RETRIEVE_PWD.equalsIgnoreCase(op)) {
 
                     if (UserOprations.OP_API_USER_REGISTER.equalsIgnoreCase(op)) {
                         // 注册
-                        iUserService.register(decodeJson, response, request);
+                        this.writeResponse(response, iUserService.register(decodeJson));
                     } else if (UserOprations.OP_API_USER_RETRIEVE_PWD.equalsIgnoreCase(op)) {
                         // 找回密码
-                        iUserService.retrievePassword(decodeJson, response, request);
+                        this.writeResponse(response, iUserService.retrievePassword(decodeJson));
                     } else if (UserOprations.OP_API_USER_UPDATE_INFO.equalsIgnoreCase(op)) {
                         // 用户信息修改
-                        iUserService.updateUserInfo(decodeJson, response, request);
+                        this.writeResponse(response, iUserService.updateUserInfo(decodeJson));
                     } else if (UserOprations.OP_API_USER_UPDATE_PWD.equalsIgnoreCase(op)) {
                         // 修改用户密码
-                        iUserService.updatePassword(decodeJson, response, request);
+                        this.writeResponse(response, iUserService.updatePassword(decodeJson));
+                    } else if (UserOprations.OP_API_USER_NAME_AVATAR.equals(op)) {
+                        // 查询用户名称和头像url
+                        this.writeResponse(response, iUserService.selectUserNameAvatar(decodeJson));
                     }
                 }
             } else {
