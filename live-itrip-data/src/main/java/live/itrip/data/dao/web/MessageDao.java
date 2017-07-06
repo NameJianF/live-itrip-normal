@@ -32,7 +32,7 @@ public class MessageDao {
         }
 
         if (pageSize <= 0) {
-            pageSize = 20;
+            pageSize = Constants.MessageInfo.PAGE_SIZE;
         }
 
         if (page < 1) {
@@ -164,5 +164,57 @@ public class MessageDao {
             Logger.error(e.getMessage(), e);
         }
         return null;
+    }
+
+
+    /**
+     * 查询对话消息
+     *
+     * @param fromId
+     * @param toId
+     * @param lastMsgId
+     * @return
+     */
+    public static ArrayList<MessageModel> selectDialogMessages(Long fromId, Long toId, Long lastMsgId) {
+        if (fromId == null || fromId <= 0) {
+            return null;
+        }
+        if (toId == null || toId <= 0) {
+            return null;
+        }
+
+        try {
+            // sql 使用 as 别名，是为了处理ResultSetHandler数据映射
+            StringBuffer stringBuffer = new StringBuffer("select id,type,user_from as userFrom,user_to as userTo,content,readme,");
+            stringBuffer.append(" create_time as createTime,update_time as updateTime from " + MessageModel.TABLE_NAME);
+            List<Object> params = new ArrayList<Object>();
+            // 用户消息
+            stringBuffer.append(" where type = ?");
+            params.add(Constants.MessageInfo.MESSAGE_TYPE_USER);
+
+            stringBuffer.append(" and user_from = ?");
+            params.add(fromId);
+
+            stringBuffer.append(" and user_to = ?");
+            params.add(toId);
+
+
+            // 向上刷新，查找之前数据，lastMsgId 为最后一条记录id
+            if (lastMsgId != null && lastMsgId > 0) {
+                stringBuffer.append(" and id < ?");
+                params.add(lastMsgId);
+            }
+
+            stringBuffer.append(" order by id desc limit ?;");
+            params.add(Constants.MessageInfo.PAGE_SIZE);
+            ResultSetHandler<List<MessageModel>> handler = new BeanListHandler<>(MessageModel.class);
+
+            List<MessageModel> msgList = DbHelper.query(stringBuffer.toString(), handler, params.toArray());
+            return (ArrayList<MessageModel>) msgList;
+        } catch (SQLException e) {
+            Logger.error(e.getMessage(), e);
+        }
+        return null;
+
     }
 }

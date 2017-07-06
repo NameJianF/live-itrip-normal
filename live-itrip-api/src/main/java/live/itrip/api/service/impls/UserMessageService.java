@@ -20,7 +20,7 @@ public class UserMessageService extends BaseService implements IUserMessageServi
 
 
     @Override
-    public void selectMessageList(HttpServletResponse response, String msgType, Long userId, int page, int pageSize, Long lastMsgId) {
+    public BaseResult selectMessageList(String msgType, Long userId, int page, int pageSize, Long lastMsgId) {
         BaseResult result = new BaseResult();
 
         ArrayList<MessageModel> list = MessageService.selectMessages(msgType, userId, page, pageSize, lastMsgId);
@@ -29,16 +29,14 @@ public class UserMessageService extends BaseService implements IUserMessageServi
 
             result.setCode(ErrorCode.SUCCESS.getCode());
             result.setData(list);
-            this.writeResponse(response, result);
-            return;
+            return result;
         }
         result.setError(ErrorCode.UNKNOWN);
-        this.writeResponse(response, result);
-
+        return result;
     }
 
     @Override
-    public void selectMessageDetail(HttpServletResponse response, Long msgId) {
+    public MessageModel selectMessageDetail(Long msgId) {
         MessageModel model = MessageService.selectMessageDetail(msgId);
 //        BaseResult result = new BaseResult();
 //        result.setData(model);
@@ -51,6 +49,22 @@ public class UserMessageService extends BaseService implements IUserMessageServi
             MessageService.updateMsgReadme(msgId);
         }
 
-        this.writeResponse(response, model);
+        return model;
+    }
+
+    @Override
+    public BaseResult selectDialogMessages(Long fromId, Long toId, Long lastMsgId) {
+        BaseResult result = new BaseResult();
+
+        ArrayList<MessageModel> list = MessageService.selectDialogMessages(fromId, toId, lastMsgId);
+        if (list != null && list.size() > 0) {
+            // 查询用户名称和头像
+
+            result.setCode(ErrorCode.SUCCESS.getCode());
+            result.setData(list);
+            return result;
+        }
+        result.setError(ErrorCode.UNKNOWN);
+        return result;
     }
 }

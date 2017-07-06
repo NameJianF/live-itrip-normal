@@ -54,5 +54,8 @@ public class MessageService {
         return MessageDao.updateMsgReadme(msgId);
     }
 
+    public static ArrayList<MessageModel> selectDialogMessages(Long fromId, Long toId, Long lastMsgId) {
+        return MessageDao.selectDialogMessages(fromId, toId, lastMsgId);
+    }
 }
 

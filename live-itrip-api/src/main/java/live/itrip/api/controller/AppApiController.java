@@ -95,7 +95,7 @@ public class AppApiController extends BaseController {
             , @RequestParam(value = "pageSize", required = false) Integer pageSize
             , @RequestParam(value = "lastMsgId", required = false) Long lastMsgId) {
 
-        iUserMessageService.selectMessageList(response, msgType, uid, page, pageSize, lastMsgId);
+        this.writeResponse(response, iUserMessageService.selectMessageList(msgType, uid, page, pageSize, lastMsgId));
     }
 
     /**
@@ -107,8 +107,22 @@ public class AppApiController extends BaseController {
     public
     @ResponseBody
     void getMessageDetail(@PathVariable Long id, HttpServletResponse response) {
-        iUserMessageService.selectMessageDetail(response, id);
+        this.writeResponse(response, iUserMessageService.selectMessageDetail(id));
     }
 
-
+    /**
+     * 对话消息
+     *
+     * @param response
+     */
+    @RequestMapping(value = "msg/dia", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void getDialogMessages(
+            @RequestParam(value = "fromId", required = false) Long fromId
+            , @RequestParam(value = "toId", required = false) Long toId
+            , @RequestParam(value = "lastMsgId", required = false) Long lastMsgId
+            , HttpServletResponse response) {
+        this.writeResponse(response, iUserMessageService.selectDialogMessages(fromId, toId, lastMsgId));
+    }
 }

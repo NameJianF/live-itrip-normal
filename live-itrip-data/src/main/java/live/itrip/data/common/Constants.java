@@ -39,7 +39,10 @@ public class Constants {
          */
         public static final String REPLY_NO = "0";
 
-
+        /**
+         * 默认分页，每页记录数大小
+         */
+        public static final int PAGE_SIZE = 20;
     }
 
 }
