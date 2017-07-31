@@ -3,6 +3,8 @@ package live.itrip.api.controller;
 import com.alibaba.fastjson.JSONObject;
 import live.itrip.api.common.Config;
 import live.itrip.api.common.Constants;
+import live.itrip.api.service.intefaces.IAppHomeService;
+import live.itrip.api.service.intefaces.IAppVisibilityService;
 import live.itrip.api.service.intefaces.IUserMessageService;
 import live.itrip.data.model.web.MessageModel;
 import live.itrip.data.service.MessageService;
@@ -22,7 +24,10 @@ public class AppApiController extends BaseController {
 
     @Autowired
     private IUserMessageService iUserMessageService;
-
+    @Autowired
+    private IAppHomeService iAppHomeService;
+    @Autowired
+    private IAppVisibilityService iAppVisibilityService;
 
     /**
      * @param response
@@ -76,6 +81,32 @@ public class AppApiController extends BaseController {
         }
     }
 
+
+    /**
+     * App 首页 分类信息
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/home/list", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void selectAppHomeList(HttpServletResponse response) {
+        this.writeResponse(response, iAppHomeService.selectHomeList());
+    }
+
+    /**
+     * App 发现页面 分类信息
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/visi/list", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void selectAppVisibilityList(HttpServletResponse response) {
+        this.writeResponse(response, iAppVisibilityService.selectVisibilityList());
+    }
+
+
     /**
      * 消息列表
      *
@@ -94,6 +125,7 @@ public class AppApiController extends BaseController {
             , @RequestParam(value = "page", required = false) Integer page
             , @RequestParam(value = "pageSize", required = false) Integer pageSize
             , @RequestParam(value = "lastMsgId", required = false) Long lastMsgId) {
+
 
         this.writeResponse(response, iUserMessageService.selectMessageList(msgType, uid, page, pageSize, lastMsgId));
     }
@@ -125,4 +157,6 @@ public class AppApiController extends BaseController {
             , HttpServletResponse response) {
         this.writeResponse(response, iUserMessageService.selectDialogMessages(fromId, toId, lastMsgId));
     }
+
+
 }

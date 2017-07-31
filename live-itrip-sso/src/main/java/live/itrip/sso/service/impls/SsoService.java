@@ -48,19 +48,15 @@ public class SsoService extends BaseService implements ISsoService {
     @Override
     public BaseResult login(String decodeJson, HttpServletRequest request) throws ApiException {
         BaseResult result = new BaseResult();
-
+        result.setCode(ErrorCode.UNKNOWN.getCode());
         try {
             LoginRequest loginRequest = JSON.parseObject(decodeJson, LoginRequest.class);
             result.setOp(loginRequest.getOp());
 
-            if (Constants.NORMAL.equals(loginRequest.getData().getSource())) {
+            if (Constants.NORMAL.equals(loginRequest.getSource())) {
                 // 正常登录： email/mobile/username
-                User user = null;
-                try {
-                    user = this.userMapper.selectByUserName(loginRequest.getData().getEmail());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                User user = this.userMapper.selectByUserName(loginRequest.getData().getEmail());
+
                 if (user == null) {
                     // 该用户不存在
                     result.setCode(ErrorCode.USERNAME_PWD_INVALID.getCode());
@@ -111,7 +107,7 @@ public class SsoService extends BaseService implements ISsoService {
                         result.setMsg(ErrorCode.USER_INVALID.getMessage());
                     }
                 }
-            } else if (Constants.WEICHAT.equals(loginRequest.getData().getSource())) {
+            } else if (Constants.WEICHAT.equals(loginRequest.getSource())) {
                 // 微信
             }
 
@@ -200,9 +196,9 @@ public class SsoService extends BaseService implements ISsoService {
         token.setUserEmail(user.getEmail());
         token.setUserId(user.getId());
         token.setApiKey(loginRequest.getApikey());
-        token.setSource(loginRequest.getData().getSource());
+        token.setSource(loginRequest.getSource());
         token.setDomain(request.getRemoteHost());
-        token.setClientVersion(loginRequest.getData().getClientVersion());
+        token.setClientVersion(loginRequest.getClientVersion());
         long time = System.currentTimeMillis();
         token.setExpireTime(time + Constants.TOKEN_EXPIRE_TIME);  //
         token.setCreateTime(time);

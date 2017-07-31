@@ -6,10 +6,12 @@ package live.itrip.sso.bean;
  * @author JianF
  */
 public class LoginRequest {
-    public String op; //
-    public String apikey; // 第三方APP的唯一标识
-    public Long timestamp; // 时间戳
-    public String sig; // 数字签名
+    private String op; //
+    private String apikey; // 第三方APP的唯一标识
+    private Long timestamp; // 时间戳
+    private String sig; // 数字签名
+    private String clientVersion; // 客户端版本
+    private String source;// 来源包括第三方
 
 
     public LoginData data;
@@ -58,12 +60,26 @@ public class LoginRequest {
         this.sig = sig;
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
+    }
+
     public static class LoginData {
-        public String email;// 用户帐号
-        public String password;// 用户密码
-        public String source;// 来源包括第三方
-        public String uid;   // 第三方登录的uid
-        public String clientVersion; // 客户端版本
+        private String email;// 用户帐号
+        private String password;// 用户密码
+        private String uid;   // 第三方登录的uid
 
         public LoginData() {
         }
@@ -84,13 +100,6 @@ public class LoginRequest {
             this.password = password;
         }
 
-        public String getSource() {
-            return source;
-        }
-
-        public void setSource(String source) {
-            this.source = source;
-        }
 
         public String getUid() {
             return uid;
@@ -100,12 +109,5 @@ public class LoginRequest {
             this.uid = uid;
         }
 
-        public String getClientVersion() {
-            return clientVersion;
-        }
-
-        public void setClientVersion(String clientVersion) {
-            this.clientVersion = clientVersion;
-        }
     }
 }

@@ -17,41 +17,23 @@ public class User {
     public static final String STATUS_INVALID = "2";
 
     private Long id;
-
     private String userName;
-
     private String email;
-
     private String img;
-
     private String mobile;
-
     private String password;
-
     private String salt;
-
     private String uidQq;
-
     private String uidWeibo;
-
     private String uidWeixin;
-
     private String uidAli;
-
     private String source;
-
     private String subsource;
-
     private String level;
-
     private String status;
-
     private String identity;
-
     private Long createTime;
-
     private Date updateTime;
-
     private String token;
 
     public Long getId() {
