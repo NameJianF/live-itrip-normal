@@ -136,6 +136,8 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             item.setItemType(AppHomeItemModel.ChildItem.ITEM_PLAN);
             item.setImageUrl(mBannerUrls[i]);
             item.setTitle(mBannerNames[i]);
+            item.setPrice(10000 + i);
+            item.setParticipate(100 + i);
             listHot.add(item);
         }
         modeHot.setItems(listHot);
@@ -155,6 +157,8 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             item.setItemType(AppHomeItemModel.ChildItem.ITEM_PLAN);
             item.setImageUrl(mBannerUrls[i]);
             item.setTitle(mBannerNames[i]);
+            item.setPrice(10000 + i);
+            item.setParticipate(100 + i);
             listLove.add(item);
         }
         modelLove.setItems(listLove);
@@ -174,6 +178,9 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             item.setItemType(AppHomeItemModel.ChildItem.ITEM_BOLG);
             item.setImageUrl(mBannerUrls[i]);
             item.setTitle(mBannerNames[i]);
+            item.setAuthor("autor " + i);
+            item.setToView(500 + i);
+            item.setFavorite(300 + 1);
             listBlog.add(item);
         }
         modelBlog.setItems(listBlog);

@@ -99,6 +99,14 @@ public class AppHomeItemModel extends BaseModel {
         private String title;
         private String imageUrl;
         private int itemType;
+        // 行程采用
+        private Integer price; // 价格
+        private Integer participate; // 参与人数
+
+        // 博客采用
+        private String author; // 作者
+        private Integer toView; // 查看
+        private Integer favorite; // 收藏
 
         public Long getId() {
             return id;
@@ -130,6 +138,46 @@ public class AppHomeItemModel extends BaseModel {
 
         public void setItemType(int itemType) {
             this.itemType = itemType;
+        }
+
+        public Integer getPrice() {
+            return price;
+        }
+
+        public void setPrice(Integer price) {
+            this.price = price;
+        }
+
+        public Integer getParticipate() {
+            return participate;
+        }
+
+        public void setParticipate(Integer participate) {
+            this.participate = participate;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public Integer getToView() {
+            return toView;
+        }
+
+        public void setToView(Integer toView) {
+            this.toView = toView;
+        }
+
+        public Integer getFavorite() {
+            return favorite;
+        }
+
+        public void setFavorite(Integer favorite) {
+            this.favorite = favorite;
         }
     }
 }
