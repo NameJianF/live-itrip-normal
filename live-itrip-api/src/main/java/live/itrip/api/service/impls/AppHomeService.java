@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Service
 public class AppHomeService extends BaseService implements IAppHomeService {
     // test data
-    private static final String[] mUrls = {
+    public static final String[] mUrls = {
             "http://file.juzimi.com/weibopic/jizema7.jpg",
             "http://file.juzimi.com/weibopic/jezime3.jpg",
             "http://file.juzimi.com/weibopic/jizrmx5.jpg",
@@ -38,7 +38,7 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             "http://file.juzimi.com/weibopic/jozemo.jpg"
     };
 
-    private static final String[] mBannerNames = {
+    public static final String[] mBannerNames = {
             "错过那天那张雨",
             "彼岸花开三色天",
             "基督山伯爵",
@@ -51,7 +51,7 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             "陪我西西里看海"
     };
 
-    private static final String[] mSubTitles = {
+    public static final String[] mSubTitles = {
             "经得住多大的诋毁，才受得住多大的赞美。",
             "经得住多大的诋毁，才受得住多大的赞美。",
             "经得住多大的诋毁，才受得住多大的赞美。",
@@ -63,7 +63,7 @@ public class AppHomeService extends BaseService implements IAppHomeService {
             "陪我到可可西里看一看海，不要未来 只要你来。",
             "陪我到可可西里看一看海，不要未来 只要你来。"
     };
-    private static final String[] mBannerUrls = {
+    public static final String[] mBannerUrls = {
             "http://file.juzimi.com/weibopic/jazrmp3.jpg",
             "http://file.juzimi.com/weibopic/jizpma7.jpg",
             "http://file.juzimi.com/weibopic/jxzlmx4.jpg",

@@ -1,18 +1,10 @@
 package live.itrip.api.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import live.itrip.api.common.Config;
-import live.itrip.api.common.Constants;
-import live.itrip.api.service.intefaces.IAppHomeService;
-import live.itrip.api.service.intefaces.IAppVisibilityService;
-import live.itrip.api.service.intefaces.IUserMessageService;
-import live.itrip.data.model.web.MessageModel;
-import live.itrip.data.service.MessageService;
+import live.itrip.api.service.intefaces.IAppPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 /**
  * Created by 建锋 on 2017/6/26.
@@ -22,6 +14,8 @@ import java.util.ArrayList;
 @RestController
 public class AppPlanController extends BaseController {
 
+    @Autowired
+    private IAppPlanService iAppPlanService;
 
     /**
      * 获取行程具体信息
@@ -32,6 +26,18 @@ public class AppPlanController extends BaseController {
     public
     @ResponseBody
     void getMessageDetail(@PathVariable Long id, HttpServletResponse response) {
-//        this.writeResponse(response, iUserMessageService.selectMessageDetail(id));
+        this.writeResponse(response, iAppPlanService.selectPlanDetail(id));
+    }
+
+    /**
+     * 获取行程具体信息
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/plan/recommends/{category}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void getRecommendList(@PathVariable String category, HttpServletResponse response) {
+        this.writeResponse(response, iAppPlanService.selectRecommendList(category));
     }
 }
