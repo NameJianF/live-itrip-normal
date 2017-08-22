@@ -21,8 +21,7 @@ public interface UserOnlineMapper {
     /**
      * delete online user
      *
-     * @param uid
      * @param email
      */
-    int deleteByUserIdOrUserEmail(@Param("uid") Integer uid, @Param("email") String email);
+    int deleteByUserIdOrUserEmail(@Param("email") String email);
 }

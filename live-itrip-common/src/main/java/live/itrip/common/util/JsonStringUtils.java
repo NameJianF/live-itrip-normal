@@ -1,6 +1,7 @@
 package live.itrip.common.util;
 
 import live.itrip.common.Encoding;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -17,11 +18,14 @@ public class JsonStringUtils {
      * @return
      */
     public static String decoderForJsonString(String json) {
+        if (StringUtils.isEmpty(json) || "null".equalsIgnoreCase(json)) {
+            return null;
+        }
         // url 解码
         String decodeJson = "";
         try {
-            json = json.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
-            json = json.replaceAll("\\+", "%2B");
+//            json = json.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+//            json = json.replaceAll("\\+", "%2B");
             decodeJson = URLDecoder.decode(json, "UTF-8");
 
 //            String tmp = URLDecoder.decode(json.replace("=", ""),Encoding.UTF8);

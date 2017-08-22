@@ -4,17 +4,11 @@ import java.util.Date;
 
 public class UserOnline {
     private Long id;
-
     private Long userId;
-
     private String userEmail;
-
     private String userName;
-
     private String userSource;
-
     private String userSubsource;
-
     private Date createTime;
 
     public Long getId() {

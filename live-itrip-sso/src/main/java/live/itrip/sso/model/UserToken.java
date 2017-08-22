@@ -2,23 +2,14 @@ package live.itrip.sso.model;
 
 public class UserToken {
     private Long id;
-
     private String authToken;
-
     private Long userId;
-
     private String userEmail;
-
     private String apiKey;
-
     private String source;
-
     private String domain;
-
     private String clientVersion;
-
     private Long expireTime;
-
     private Long createTime;
 
     public Long getId() {

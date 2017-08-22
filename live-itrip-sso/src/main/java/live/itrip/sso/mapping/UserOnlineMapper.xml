@@ -121,6 +121,5 @@
     <delete id="deleteByUserIdOrUserEmail" parameterType="map">
         delete from user_online
         where user_email = '${email}'
-        or user_id = ${uid}
     </delete>
 </mapper>

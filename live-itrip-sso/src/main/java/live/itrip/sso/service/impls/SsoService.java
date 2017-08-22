@@ -6,6 +6,7 @@ import live.itrip.common.Logger;
 import live.itrip.common.response.BaseResult;
 import live.itrip.common.security.Md5Utils;
 import live.itrip.common.util.UuidUtils;
+import live.itrip.common.validator.PasswordParam;
 import live.itrip.sso.bean.AuthUserRequest;
 import live.itrip.sso.bean.LoginRequest;
 import live.itrip.sso.bean.LogoutRequest;
@@ -67,9 +68,9 @@ public class SsoService extends BaseService implements ISsoService {
                         result.setCode(ErrorCode.USER_AUTH_INVALID.getCode());
                         result.setMsg(ErrorCode.USER_AUTH_INVALID.getMessage());
                     } else if (user.getStatus().equals("1")) {
-                        // 正常用户
-                        // 验证密码
-                        String password = Md5Utils.getStringMD5(user.getSalt() + loginRequest.getData().getPassword());
+                        // 正常用户,验证密码
+                        String password = PasswordParam.getPassword(loginRequest.getData().getPassword(),
+                                user.getSalt(), loginRequest.getData().getCiphertext());
 
                         if (user.getPassword().equals(password)) {
                             // 生成并保存token
@@ -79,7 +80,7 @@ public class SsoService extends BaseService implements ISsoService {
                             insertIntoOnlineTable(user);
 
                             // 密码正确，保存 session信息
-                            request.getSession().setAttribute(Constants.SESSION_USER, user);
+                            request.getSession().setAttribute(token.getAuthToken(), user);
                             result.setCode(ErrorCode.SUCCESS.getCode());
 
                             // 处理用户返回信息
@@ -132,13 +133,18 @@ public class SsoService extends BaseService implements ISsoService {
             result.setOp(logoutRequest.getOp());
 
             // remove from online table
-            int ret = this.userOnlineMapper.deleteByUserIdOrUserEmail(logoutRequest.getUid(), logoutRequest.getEmail());
+            int ret = this.userOnlineMapper.deleteByUserIdOrUserEmail(logoutRequest.getEmail());
 
-            // remove session
-            request.getSession().setAttribute(Constants.SESSION_USER, null);
+            if (StringUtils.isNotEmpty(logoutRequest.getToken())) {
+                // remove session
+                request.getSession().setAttribute(logoutRequest.getToken(), null);
+                // TODO remove token
+            }
 
             if (ret <= 0) {
                 result.setCode(ErrorCode.UNKNOWN.getCode());
+            }else{
+                result.setCode(ErrorCode.SUCCESS.getCode());
             }
             return result;
         } catch (Exception e) {
@@ -158,26 +164,34 @@ public class SsoService extends BaseService implements ISsoService {
             BaseResult authUserResponse = new BaseResult();
             authUserResponse.setOp(authUserRequest.getOp());
 
-            User user = null;
-            if (!StringUtils.isEmpty(authUserRequest.getEmail())) {
-                user = this.userMapper.selectByUserName(authUserRequest.getEmail());
-            } else if (!StringUtils.isEmpty(authUserRequest.getMobile())) {
-                user = this.userMapper.selectByUserName(authUserRequest.getEmail());
-            }
-
-            if (user == null) {
-                authUserResponse.setCode(ErrorCode.USERNAME_PWD_INVALID.getCode());
-            } else {
-                if (User.STATUS_INIT.equalsIgnoreCase(user.getStatus()) ||
-                        User.STATUS_NORMAL.equalsIgnoreCase(user.getStatus())) {
+            if (StringUtils.isNotEmpty(authUserRequest.getSid())) {
+                // token
+                UserToken userToken = this.userTokenMapper.selectByToken(authUserRequest.getSid());
+                if (userToken != null) {
                     // 正常
                     authUserResponse.setCode(ErrorCode.SUCCESS.getCode());
+                }
+            } else {
+                User user = null;
+                if (!StringUtils.isEmpty(authUserRequest.getEmail())) {
+                    user = this.userMapper.selectByUserName(authUserRequest.getEmail());
+                } else if (!StringUtils.isEmpty(authUserRequest.getMobile())) {
+                    user = this.userMapper.selectByUserName(authUserRequest.getEmail());
+                }
+
+                if (user == null) {
+                    authUserResponse.setCode(ErrorCode.USERNAME_PWD_INVALID.getCode());
                 } else {
-                    // 不可用
-                    authUserResponse.setCode(ErrorCode.USER_AUTH_INVALID.getCode());
+                    if (User.STATUS_INIT.equalsIgnoreCase(user.getStatus()) ||
+                            User.STATUS_NORMAL.equalsIgnoreCase(user.getStatus())) {
+                        // 正常
+                        authUserResponse.setCode(ErrorCode.SUCCESS.getCode());
+                    } else {
+                        // 不可用
+                        authUserResponse.setCode(ErrorCode.USER_AUTH_INVALID.getCode());
+                    }
                 }
             }
-
             return authUserResponse;
         } catch (Exception e) {
             throw new ApiException(e.getMessage(), e, true);

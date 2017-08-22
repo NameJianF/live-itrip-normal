@@ -35,6 +35,11 @@ public class User {
     private Long createTime;
     private Date updateTime;
     private String token;
+    /**
+     * 是：1，否：0
+     */
+    private String ciphertext;// 密码是否是密文
+
 
     public Long getId() {
         return id;
@@ -186,5 +191,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+
+    public String getCiphertext() {
+        return ciphertext;
+    }
+
+    public void setCiphertext(String ciphertext) {
+        this.ciphertext = ciphertext;
     }
 }

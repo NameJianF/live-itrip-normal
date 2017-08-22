@@ -10,6 +10,10 @@ public class UserUpdatePwdRequest extends RequestHeader {
     private Long uid;  // user id
     private String originPwd; // old password
     private String password;  // new password
+    /**
+     * 是：1，否：0
+     */
+    private String ciphertext;// 密码是否是密文
 
     public Long getUid() {
         return uid;
@@ -33,5 +37,13 @@ public class UserUpdatePwdRequest extends RequestHeader {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCiphertext() {
+        return ciphertext;
+    }
+
+    public void setCiphertext(String ciphertext) {
+        this.ciphertext = ciphertext;
     }
 }

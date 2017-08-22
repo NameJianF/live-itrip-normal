@@ -6,12 +6,6 @@ package live.itrip.sso.common;
 public class Constants {
     public static final String DES_KEY = "feng2016";
 
-
-    /**
-     * session 中存储的用户信息标识
-     */
-    public static final String SESSION_USER = "SsoSessionUser";
-
     /**
      * api-log
      */
@@ -31,6 +25,5 @@ public class Constants {
      * 微信
      */
     public static final String WEICHAT = "weichat";
-
 
 }

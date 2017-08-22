@@ -8,15 +8,16 @@ import live.itrip.common.request.RequestHeader;
  * logout
  */
 public class LogoutRequest extends RequestHeader {
-    private Integer uid;   // 用户uid
+    private Long uid;   // 用户uid
     private String email; // email
+    private String token; // token
 
 
-    public Integer getUid() {
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(Integer uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
@@ -26,5 +27,13 @@ public class LogoutRequest extends RequestHeader {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

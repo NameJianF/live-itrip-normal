@@ -40,7 +40,7 @@ public class SsoController extends AbstractController {
         String decodeJson = JsonStringUtils.decoderForJsonString(json);
         Logger.debug(
                 String.format("timestamp:%s action:%s json:%s",
-                        System.currentTimeMillis(), "user", decodeJson));
+                        System.currentTimeMillis(), "sso", decodeJson));
 
         if (StringUtils.isEmpty(decodeJson)) {
             this.jsonIsEmpty(response);

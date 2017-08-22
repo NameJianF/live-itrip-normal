@@ -7,7 +7,9 @@ import live.itrip.common.ErrorCode;
 import live.itrip.common.response.BaseResult;
 import live.itrip.common.security.Md5Utils;
 import live.itrip.common.util.UuidUtils;
+import live.itrip.common.validator.PasswordParam;
 import live.itrip.sso.bean.*;
+import live.itrip.sso.common.Constants;
 import live.itrip.sso.common.exception.ApiException;
 import live.itrip.sso.dao.UserMapper;
 import live.itrip.sso.model.User;
@@ -49,7 +51,7 @@ public class UserService extends BaseService implements IUserService {
             User user = userRegisterRequest.getData();
             if (user != null) {
                 String salt = UuidUtils.getUuidLowerCase(false);
-                String pwd = Md5Utils.getStringMD5(salt + user.getPassword());
+                String pwd = PasswordParam.getPassword(user.getPassword(), salt, user.getCiphertext());
                 user.setPassword(pwd);
                 user.setSalt(salt);
                 user.setCreateTime(System.currentTimeMillis());
@@ -103,10 +105,12 @@ public class UserService extends BaseService implements IUserService {
                 return userUpdatePwdResponse;
             }
 
-            String strmd5 = Md5Utils.getStringMD5(user.getSalt() + userUpdatePwdRequest.getOriginPwd());
-            if (StringUtils.isNotEmpty(strmd5) && strmd5.equals(user.getPassword())) {
+            // 正常用户,验证密码
+            String password = PasswordParam.getPassword(userUpdatePwdRequest.getOriginPwd()
+                    , user.getSalt(), userUpdatePwdRequest.getCiphertext());
+            if (StringUtils.isNotEmpty(password) && password.equals(user.getPassword())) {
                 // 原密码正确
-                String pwd = Md5Utils.getStringMD5(user.getSalt() + userUpdatePwdRequest.getPassword());
+                String pwd = PasswordParam.getPassword(userUpdatePwdRequest.getPassword(), user.getSalt(), PasswordParam.PASSWORD_CIPHERTEXT);
                 int ret = this.userMapper.updatePasswordById(user.getId(), pwd);
                 if (ret > 0) {
                     // success
@@ -151,7 +155,7 @@ public class UserService extends BaseService implements IUserService {
             }
 
             user.setPassword(null); // 不修改密码
-            user.setSalt(null);
+            user.setSalt(null);// 不修改salt
 
             int ret = this.userMapper.updateByPrimaryKeySelective(user);
             if (ret > 0) {
@@ -182,7 +186,8 @@ public class UserService extends BaseService implements IUserService {
             if (!StringUtils.isEmpty(retrievePwdRequest.getEmail())) {
                 User user = this.userMapper.selectByUserName(retrievePwdRequest.getEmail());
                 String initpwd = UuidUtils.getUuidLowerCase(false).substring(0, 6);
-                String pwd = Md5Utils.getStringMD5(user.getSalt() + initpwd);
+
+                String pwd = PasswordParam.getPassword(initpwd, user.getSalt(), PasswordParam.PASSWORD_NOT_CIPHERTEXT);
 
                 int ret = this.userMapper.updatePasswordById(user.getId(), pwd);
                 if (ret > 0) {
@@ -201,7 +206,7 @@ public class UserService extends BaseService implements IUserService {
             if (!StringUtils.isEmpty(retrievePwdRequest.getMobile())) {
                 User user = this.userMapper.selectByUserName(retrievePwdRequest.getEmail());
                 String initpwd = UuidUtils.getUuidLowerCase(false).substring(0, 6);
-                String pwd = Md5Utils.getStringMD5(user.getSalt() + initpwd);
+                String pwd = PasswordParam.getPassword(initpwd, user.getSalt(), PasswordParam.PASSWORD_NOT_CIPHERTEXT);
 
                 int ret = this.userMapper.updatePasswordById(user.getId(), pwd);
                 if (ret > 0) {

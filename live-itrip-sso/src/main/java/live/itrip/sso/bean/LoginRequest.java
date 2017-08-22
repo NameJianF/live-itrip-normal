@@ -80,6 +80,10 @@ public class LoginRequest {
         private String email;// 用户帐号
         private String password;// 用户密码
         private String uid;   // 第三方登录的uid
+        /**
+         * 是：1，否：0
+         */
+        private String ciphertext;// 密码是否是密文
 
         public LoginData() {
         }
@@ -109,5 +113,12 @@ public class LoginRequest {
             this.uid = uid;
         }
 
+        public String getCiphertext() {
+            return ciphertext;
+        }
+
+        public void setCiphertext(String ciphertext) {
+            this.ciphertext = ciphertext;
+        }
     }
 }

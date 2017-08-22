@@ -4,13 +4,23 @@ package live.itrip.api.common;
  * Created by Feng on 2017/6/28.
  */
 public class Constants {
+    /**
+     * 密码是密文
+     */
+    public static final String PASSWORD_CIPHERTEXT = "1";
+    /**
+     * 密码不是密文
+     */
+    public static final String PASSWORD_NOT_CIPHERTEXT = "0";
+
+
 
     public static class AppType {
         public final static String APP_ANDROID = "android";
         public final static String APP_IOS = "iOS";
     }
 
-    public static class PlanType{
+    public static class PlanType {
 
         /**
          * 自由行
